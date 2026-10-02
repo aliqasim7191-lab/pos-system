@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error(msg + " at " + lineNo);
+            // send to php
+            fetch('log_error.php?e=' + encodeURIComponent(msg + " at " + lineNo));
+        }
+    </script>
+</head>
+<body>
+    <iframe src="index.php"></iframe>
+</body>
+</html>

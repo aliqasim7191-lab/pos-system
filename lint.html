@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            fetch('log_error.php?e=' + encodeURIComponent(msg + " at " + lineNo));
+        }
+    </script>
+    <script src="assets/js/app.js"></script>
+</head>
+<body></body>
+</html>
