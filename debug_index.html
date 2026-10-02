@@ -1,0 +1,892 @@
+
+Warning: session_start(): Session cannot be started after headers have already been sent in C:\xampp\htdocs\point of sale\includes\header.php on line 3
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point of Sale System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css?v=1787889632">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <meta name="theme-color" content="#0ea5e9">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        registration.update(); // Force update
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+    </script>
+</head>
+<body>
+    <style>
+    @keyframes dropFade {
+        from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .show-dropdown { 
+        display: flex !important; 
+        flex-direction: column; 
+        animation: dropFade 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    #kebabDropdown {
+        border: 1px solid rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+    }
+    #kebabDropdown::-webkit-scrollbar {
+        width: 6px;
+    }
+    #kebabDropdown::-webkit-scrollbar-thumb {
+        background: #cbd5e1; 
+        border-radius: 10px;
+    }
+    #kebabDropdown a {
+        color: #334155 !important;
+        background: transparent !important;
+        padding: 0.85rem 1.2rem;
+        margin: 0.25rem 0.6rem;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+    #kebabDropdown a:hover {
+        background: linear-gradient(90deg, #eff6ff, #e0f2fe) !important;
+        color: #0284c7 !important;
+        border-color: #bae6fd;
+        box-shadow: inset 0 0 0 1px rgba(2, 132, 199, 0.1);
+    }
+    #kebabDropdown a.active {
+        background: linear-gradient(90deg, #dbeafe, #bfdbfe) !important;
+        color: #1d4ed8 !important;
+    }
+    .menu-header {
+        padding: 0.8rem 1.2rem 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        background: -webkit-linear-gradient(45deg, #2563eb, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
+    <div style="height: 6px; background: #1e293b; width: 100%;"></div>
+    <header class="main-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <!-- Royal Blue Theme Kebab Menu -->
+            <div style="position: relative;" id="kebabMenuContainer">
+                <button onclick="document.getElementById('kebabDropdown').classList.toggle('show-dropdown'); event.stopPropagation();" style="background: linear-gradient(135deg, #2563eb, #0ea5e9); border: 2px solid rgba(255,255,255,0.4); color: white; cursor: pointer; width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 18px rgba(37, 99, 235, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(37, 99, 235, 0.4)';">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                </button>
+                <div id="kebabDropdown" style="display: none; position: absolute; top: calc(100% + 14px); left: 0; background: rgba(255, 255, 255, 0.98); min-width: 290px; box-shadow: 0 15px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05); border-radius: 16px; border-top: 4px solid #0ea5e9; z-index: 9999; padding: 0.5rem 0 1rem 0; backdrop-filter: blur(12px); max-height: 80vh; overflow-y: auto;">
+                    <div style="padding: 0.5rem 1.2rem; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 0.5rem;">
+                        <div id="google_translate_element"></div>
+                        <a href="#" onclick="document.cookie='googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/'; document.cookie='googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.'+location.hostname; window.location.reload(); return false;" class="btn" style="background:#f1f5f9; color:#0f172a; margin-top:0.5rem; text-align:center; font-weight:600; font-size:0.85rem; display:block;">Reset to English</a>
+                    </div>
+                                          <div class="menu-header">Main Menu</div>
+                                        <a href="promotions.php" class=""> &#x1F381; Promos</a>
+                    <a href="ecommerce.php" class=""> &#x1F310; E-Commerce</a>
+                                        
+                                        <div class="menu-header" style="margin-top: 0.5rem; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 0.8rem;">Admin Tools</div>
+                    <a href="staff.php" class=""> &#x1F465; Staff</a>
+                    <a href="hr.php" class=""> &#x1F4BC; HR & Payroll</a>
+                    <a href="settings.php" class=""> &#x2699;&#xFE0F; Settings</a>
+                                        <a href="settings_integrations.php" class=""> &#x1F50C; Integrations</a>
+                    <a href="store.php?t=1" target="_blank" style="background:#ecfdf5; color:#059669; border-left-color:#10b981; font-weight:bold;"> &#x1F6D2; View Online Store</a>
+                    <a href="audit_logs.php" class=""> &#x1F4DC; Audit Logs</a>
+                                    </div>
+            </div>
+            
+                          <!-- Solid White Divider -->
+              <div style="width: 2px; height: 36px; background: rgba(255, 255, 255, 0.3); margin: 0 0.3rem; border-radius: 2px;"></div>
+              <div class="logo">
+                <img src="assets/images/logo.jpg" alt="Logo" style="height: 32px; width: auto; max-width: 80px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background: white;">
+                <div style="display: flex; flex-direction: column; line-height: 1.1; margin-left: 0.5rem;">
+                    <div style="white-space: nowrap;"><span style="font-size: 0.95rem; font-weight: 800; color: #ffffff;">ALI OFFICIAL STORE</span> <span style="font-size: 0.8rem; font-weight: 400; color: rgba(255,255,255,0.7);">POS</span></div>
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px;">&#x1F3E2; Main Branch</div>
+                </div>
+            </div>
+            
+            <!-- Solid White Divider -->
+            <div style="width: 2px; height: 36px; background: rgba(255, 255, 255, 0.5); margin: 0 0.5rem 0 1rem; border-radius: 2px;"></div>
+        </div>
+        <nav class="main-nav" style="margin-left: 0;">
+            <ul>
+            <li><a href="index.php" class=" btn" style="background:#0ea5e9; color:white; border-radius:6px;">POS Terminal</a></li>
+            <li><a href="shift.php" class=" btn" style="background:#f97316; color:white; border-radius:6px;">Cash Register</a></li>
+                
+                                <li><a href="dashboard.php" class="">&#x1F4CA; Dashboard</a></li>
+                <li><a href="analytics.php" class="">&#x1F4C8; Analytics</a></li>
+                <li><a href="products.php" class="">Inventory</a></li>
+                <li><a href="transfers.php" class="">Transfers</a></li>
+                <li><a href="customers.php" class="">Customers</a></li>
+                <li><a href="suppliers.php" class="">Suppliers</a></li>
+                <li><a href="purchase_orders.php" class="">POs</a></li>
+                <li><a href="purchases.php" class="">Purchases</a></li>
+                <li><a href="expenses.php" class="">Expenses</a></li>
+                <li><a href="sales.php" class="">Sales History</a></li>
+                <li><a href="returns.php" class="">Returns</a></li>
+                
+                
+                <li><a href="damaged_stock.php" class="">Damage Stock</a></li>
+                                
+                                <li><a href="branches.php" class="">&#x1F3E2; Branches</a></li>
+                <li><a href="reports.php" class="">Sale Report</a></li>
+                <li><a href="historical_monthly.php" class="">Monthly History</a></li>
+                            </ul>
+        </nav>
+        
+        <!-- Fixed Right Actions (Profile, Alerts, End of Day, Logout) -->
+        <div style="display: flex; align-items: center; gap: 0.4rem; margin-left: auto; padding-left: 0.2rem; flex-shrink: 0;">
+            <!-- Google Translate Scripts -->
+            <script type="text/javascript">
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({includedLanguages: 'en,ur,ar,hi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+            }
+            </script>
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <style>
+                .goog-te-gadget-simple {
+                    background-color: #f1f5f9;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 4px;
+                    padding: 0.2rem 0.5rem;
+                    font-size: 0.85rem;
+                }
+                .goog-te-gadget-icon { display: none; }
+                .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+                body { top: 0 !important; }
+                .skiptranslate iframe { display: none !important; }
+            </style>
+
+
+                                        <a href="end_of_day.php" style="display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; background: linear-gradient(135deg, #fbbf24, #d97706); border: none; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; font-size: 0.85rem; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.4); transition: all 0.2s ease; letter-spacing: 0.3px; text-shadow: 0 1px 1px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(217, 119, 6, 0.5)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(217, 119, 6, 0.4)';">
+                    <span style="font-size: 1.1rem; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">&#x1F319;</span> End of Day
+                </a>
+                        
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
+                <button onclick="toggleFullScreen()" title="Full Screen (F11)" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)';" onmouseout="this.style.background='rgba(255,255,255,0.1)';">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                </button>
+                <a href="alerts.php" id="alertBellIcon" style="position: relative; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)';" onmouseout="this.style.background='rgba(255,255,255,0.1)';">
+                    <svg width="18" height="18" fill="#fbbf24" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                                            <span style="position: absolute; top: -5px; right: -8px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; padding: 1px 4px; border-radius: 99px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            2                        </span>
+                                    </a>
+            </div>
+
+                <div style="display: flex; align-items: center;">
+                    <a href="logout.php" style="color: white; background: #ef4444; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; text-decoration: none; font-weight: 600; margin-left: 0.2rem; transition: background 0.2s;" onmouseover="this.style.background='#dc2626';" onmouseout="this.style.background='#ef4444';">Logout</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        document.addEventListener("click", function(e) {
+            const dropdown = document.getElementById("kebabDropdown");
+            const container = document.getElementById("kebabMenuContainer");
+            if(dropdown && container && !container.contains(e.target)) {
+                dropdown.classList.remove("show-dropdown");
+            }
+        });
+        </script>
+    </header>
+
+    <script>
+        // Force remove dark theme if previously set by user
+        localStorage.removeItem('theme');
+        document.documentElement.removeAttribute('data-theme');
+        
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    showToast("Error", "Error attempting to enable full-screen mode.", "error");
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+
+    <!-- Global Toast Notification Container -->
+    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <script>
+    function showToast(title, message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        let bgColor = '#10b981'; // success green
+        let icon = '✅';
+        if (type === 'error') { bgColor = '#ef4444'; icon = '❌'; }
+        else if (type === 'warning') { bgColor = '#f59e0b'; icon = '⚠️'; }
+        else if (type === 'info') { bgColor = '#3b82f6'; icon = 'ℹ️'; }
+
+        toast.style.cssText = `
+            background: ${bgColor};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            min-width: 300px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.95;
+            cursor: pointer;
+        `;
+
+        toast.innerHTML = `
+            <div style="font-size: 1.25rem;">${icon}</div>
+            <div>
+                <strong style="display: block; font-size: 1rem; margin-bottom: 0.2rem;">${title}</strong>
+                <span style="font-size: 0.9rem; opacity: 0.9;">${message}</span>
+            </div>
+        `;
+
+        // Click to dismiss
+        toast.onclick = () => {
+            toast.style.transform = 'translateX(120%)';
+            setTimeout(() => toast.remove(), 300);
+        };
+
+        container.appendChild(toast);
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+            toast.style.transform = 'translateX(0)';
+        });
+
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 300);
+            }
+        }, 4000);
+    }
+    
+    // Override default alert if we want
+    // window.alert = function(msg) { showToast('Notice', msg, 'info'); };
+    </script>
+
+    <main class="container">
+
+<div class="container pos-layout">
+    <div class="pos-left">
+        <!-- Search and Categories -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <input type="text" id="barcodeInput" placeholder="Scan Barcode (F4)" style="flex: 1; padding: 0.75rem; border: 2px solid #3b82f6; border-radius: 8px; font-size: 1.1rem; outline: none;">
+            <input type="text" id="searchInput" placeholder="Search product... (F2)" style="flex: 2; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 1.1rem;">
+        </div>
+        
+        <div class="category-filters" id="categoryFilters" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+            <button class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 50px;" onclick="filterCategory('all')">All</button>
+            <button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('GROCERY')">GROCERY</button><button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('BEAUTY')">BEAUTY</button><button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('PHARMACY')">PHARMACY</button><button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('ELECTRONICS')">ELECTRONICS</button><button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('Hardware')">HARDWARE</button><button class='btn' style='background: white; border: 1px solid #cbd5e1; padding: 0.4rem 1.5rem; border-radius: 50px; color: #475569; font-weight: 600;' onclick="filterCategory('Stationery')">STATIONERY</button>        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; overflow-y: auto; max-height: calc(100vh - 250px); padding-right: 0.5rem;">
+            <!-- Products injected via JS -->
+        </div>
+    </div>
+    
+    <div class="pos-right" style="display: flex; flex-direction: column; height: calc(100vh - 80px);">
+        <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%; border: 1px solid #e2e8f0;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="margin: 0; font-size: 1.25rem; color: #0f172a; font-weight: 800;">Current Order</h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn" style="background: #fee2e2; color: #ef4444; padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="clearCart()">Clear</button>
+                    <button class="btn" style="background: #f1f5f9; color: #64748b; padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="holdSale()">Hold</button>
+                    <button class="btn" style="background: #eff6ff; color: #3b82f6; padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="window.location.href='held_sales.php'">Saved</button>
+                    <button class="btn" style="background: #f5f3ff; color: #8b5cf6; padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="promptReprint()">Reprint</button>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem; position: relative;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.25rem;">
+                    <label style="font-weight: 600; font-size: 0.8rem; color: #64748b; display:block; text-transform: uppercase;">Customer</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <div id="customer-balance-display" style="display:none; font-size: 0.75rem; font-weight: bold; color: #ef4444; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">Outstanding: $<span id="customer-balance-val">0</span></div>
+                        <div id="customer-points-display" style="display:none; font-size: 0.75rem; font-weight: bold; color: #10b981; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">⭐ <span id="customer-points-val">0</span> Pts</div>
+                    </div>
+                </div>
+            <select id="customerSelect" style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 500; color: #0f172a; outline: none; background: #f8fafc;" onchange="handleCustomerChange()">
+                <option value="" data-type="walk_in" data-points="0">Walk-in Customer <i class="fa fa-user"></i></option>
+                <option value='7' data-type='registered' data-points='796' data-balance='0'>abdul rehman</option><option value='6' data-type='registered' data-points='436' data-balance='-111.25'>Ali Qasim</option><option value='5' data-type='registered' data-points='572' data-balance='-0.05'>Muhammad Hussain</option>            </select>
+        </div>
+
+        <div class="cart-items" id="cart-items" style="flex: 1; overflow-y: auto; margin-bottom: 1rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding-top: 1rem;">
+            <div style="text-align:center; padding: 3rem 1rem; color: #94a3b8;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">&#x1F6D2;</div>
+                <h3 style="color: #0f172a; font-size: 1.1rem; margin-bottom: 0.25rem;">Your order is empty</h3>
+                <p style="font-size:0.85rem;">Scan a barcode or select a product to begin.</p>
+            </div>
+        </div>
+
+        <div class="cart-summary" style="padding-bottom: 1rem;">
+            <div class="summary-row" style="display:flex; justify-content:space-between; margin-bottom: 0.4rem; font-size: 0.9rem; color: #475569;">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" style="color: #0f172a; font-weight: 600;">$0.00</span>
+            </div>
+            <div class="summary-row" style="display:flex; justify-content:space-between; margin-bottom: 0.4rem; font-size: 0.9rem; color: #475569;">
+                <span>Discount</span>
+                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                    <span>-$</span><input type="number" step="0.01" id="cart-discount" value="0" style="width: 60px; text-align:right; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 4px; font-size: 0.85rem;" oninput="renderCart(false)">
+                </div>
+            </div>
+            <div class="summary-row" style="display:flex; justify-content:space-between; margin-bottom: 0.4rem; font-size: 0.9rem; color: #475569;">
+                <span>Tax (0%)</span>
+                <span id="cart-tax" style="color: #0f172a; font-weight: 600;">$0.00</span>
+            </div>
+            <div class="summary-row" style="display:flex; justify-content:space-between; align-items:flex-end; padding-top: 0.75rem; margin-top: 0.5rem; font-size: 1.4rem; font-weight: 800; color: #0f172a; border-top: 2px dashed #e2e8f0;">
+                <span>TOTAL</span>
+                <div style="text-align: right;">
+                    <div id="cart-total">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: none; margin-bottom: 1rem;">
+            <label style="display:block; font-weight: 600; font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; text-transform: uppercase;">Order Notes</label>
+            <textarea id="order-notes" placeholder="Add notes for this order..." style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; color: #0f172a; outline: none; resize: none;" rows="2"></textarea>
+        </div>
+
+        <div style="display: none; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <div style="flex: 1;">
+                <select id="orderModeSelect" style="width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; color: #475569; outline: none;">
+                    <option value="sale">Sale</option>
+                </select>
+            </div>
+            <button class="btn" style="background: #fef3c7; color: #d97706; width: auto; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;" onclick="document.getElementById('holdSaleModal').style.display='flex'">Hold</button>
+            <button class="btn" style="background: #fee2e2; color: #ef4444; width: auto; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600;" onclick="clearCart()" title="Clear cart">Clear</button>
+        </div>
+        
+        <button class="btn btn-primary" id="checkoutMainBtn" style="width: 100%; padding: 1.25rem 1rem; font-size: 1.25rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(37,99,235,0.2);" onclick="checkout()">
+            <span>CHECKOUT</span>
+            <span id="checkout-total-btn">$0.00</span>
+        </button>
+    </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center; padding: 1rem;">
+    <div style="background:var(--surface-color); padding: 2rem; border-radius: 12px; width: 450px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+        <h3 style="margin-bottom: 1rem; font-size: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; position: sticky; top: -2rem; background: var(--surface-color); z-index: 10;">Complete Payment</h3>
+        
+        <!-- Cart Items Preview -->
+        <div id="checkout-cart-items" style="max-height: 150px; overflow-y: auto; margin-bottom: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem; background: #f8fafc; font-size: 0.9rem; color: #475569;">
+            <!-- dynamically populated -->
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--primary-color);">
+            <span>Total Due:</span>
+            <span id="modal-total">$0.00</span>
+        </div>
+        
+        <div id="modal-points-section" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; padding:0.75rem; border-radius:8px; margin-bottom:1rem; align-items:center; justify-content:space-between;">
+            <div>
+                <strong style="color:#166534; font-size:0.9rem;">ðŸŒŸ Available Points: <span id="modal-available-points">0</span></strong>
+                <div style="font-size:0.75rem; color:#15803d;">10 Points = $1.00 Discount</div>
+            </div>
+            <div>
+                <input type="number" id="modal-points-to-use" value="0" min="0" step="10" style="width: 80px; padding: 0.25rem; border: 1px solid #86efac; border-radius: 4px;" oninput="recalculateModal()">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem;">Customer Name (Walk-in)</label>
+            <input type="text" id="modal-customer-name" placeholder="Leave empty if registered customer selected" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 0.5rem;">
+            
+            <label style="display:block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.25rem;">Customer Address</label>
+            <input type="text" id="modal-customer-address" placeholder="Optional" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <div id="payment-method-section">
+                <label style="display:block; font-weight: 600; margin-bottom: 0.5rem;">Payment Method</label>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                    <label style="border:1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; text-align:center; cursor:pointer;">
+                        <input type="radio" name="payment_method" value="cash" checked onchange="toggleCashInput()"> Cash
+                </label>
+                <label style="border:1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; text-align:center; cursor:pointer;">
+                    <input type="radio" name="payment_method" value="card" onchange="toggleCashInput()"> Card
+                </label>
+                <label style="border:1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; text-align:center; cursor:pointer;">
+                    <input type="radio" name="payment_method" value="mobile" onchange="toggleCashInput()"> Mobile Wallet
+                </label>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                <label style="border:1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; text-align:center; cursor:pointer;">
+                    <input type="radio" name="payment_method" value="bank" onchange="toggleCashInput()"> Bank Transfer
+                </label>
+                <label id="khata-method-label" style="display:none; border:1px solid #bae6fd; padding: 0.5rem; border-radius: 8px; text-align:center; cursor:pointer; background:#e0f2fe; color:#0369a1; font-weight:bold;">
+                    <input type="radio" name="payment_method" value="credit" onchange="toggleCashInput()"> Khata / Account Balance
+                </label>
+            </div>
+        </div>
+        
+        <div id="takenByDiv" style="display:none; margin-bottom: 1rem; border: 1px dashed var(--primary-color); padding: 0.75rem; border-radius: 8px; background: #f8fafc;">
+            <label style="display:block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--primary-color);">Taken By (Name / Signature)</label>
+            <input type="text" id="modal-taken-by" placeholder="Who is taking these products?" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
+            <div style="font-size:0.75rem; color:#64748b; margin-top:0.25rem;">For Khata Accounts only, to record the receiver's name.</div>
+        </div>
+        
+        <div id="khata-notice" style="display:none; background:#e0f2fe; border:1px solid #7dd3fc; padding:1rem; border-radius:8px; text-align:center; margin-bottom: 1.5rem;">
+            <strong style="color:#0369a1; font-size: 1.1rem;">ðŸ“˜ Khata Transaction</strong>
+            <p style="color:#0ea5e9; font-size: 0.9rem; margin-top:0.25rem;">This bill will be automatically added to the customer's account balance.</p>
+        </div>
+        </div>
+
+        
+        <div style="margin-bottom: 1.5rem; background: #fff; border: 1px dashed #cbd5e1; padding: 0.75rem; border-radius: 8px;">
+            <label style="display:block; font-weight: 600; margin-bottom: 0.5rem; color: #475569; font-size: 0.9rem;">Promo Code / Voucher</label>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="modal-promo-code" style="flex: 1; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" placeholder="Enter code">
+                <button class="btn" style="padding: 0.6rem 1rem; background: #3b82f6; color: white; border-radius: 6px;" onclick="applyPromo()">Apply</button>
+            </div>
+            <div id="promo-message" style="font-size: 0.8rem; margin-top: 0.5rem; display: none;"></div>
+            <input type="hidden" id="applied-promo-discount" value="0">
+        </div>
+<div id="cashInputDiv" style="margin-bottom: 1.5rem;">
+            <label style="display:block; font-weight: 600; margin-bottom: 0.5rem; color: #0f172a;">Amount Received ($)</label>
+            <input type="number" step="0.01" id="modal-received" style="width: 100%; padding: 1rem; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.25rem; outline: none; font-weight: bold; color: #0f172a;" oninput="calculateChange()">
+            
+
+
+            <div style="display:flex; justify-content:space-between; align-items: center; margin-top: 1rem; font-size: 1.25rem; font-weight: 800; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                <span style="color: #64748b;">Change:</span>
+                <span id="modal-change" style="color: #10b981;">$0.00</span>
+            </div>
+        </div>
+
+        <div style="display:flex; gap: 1rem;">
+            <button class="btn btn-primary" id="confirmBtn" style="flex: 2; padding: 1rem; font-size: 1.1rem;" onclick="confirmCheckout()">Confirm Payment</button>
+            <button class="btn" style="flex: 1; background:#e2e8f0; color:var(--text-main);" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const PRODUCTS_DATA = [{"id":"1","name":"Fresh Milk","price":"3.50","stock":"8878.00","image":"uploads\/1787202720_ChatGPT Image Aug 20, 2026, 10_06_33 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1001494950","category":"GROCERY","tax_class_id":null,"description":"Fresh organic milk bottle.","purchase_price":"0.00","wholesale_price":"3.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"2","name":"Bread Pack","price":"30.00","stock":"449.00","image":"bread_pack.jpg","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1003147751","category":"GROCERY","tax_class_id":null,"description":"Sliced bread loaf in paper bag.","purchase_price":"20.00","wholesale_price":"30.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"3","name":"Organic Apples","price":"30.00","stock":"496.00","image":"organic_apples.jpg","created_at":"2026-08-17 15:14:36","unit":"kg","barcode":"1006118002","category":"GROCERY","tax_class_id":null,"description":"Fresh organic red apples.","purchase_price":"20.00","wholesale_price":"30.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"4","name":"Eggs Dozen","price":"20.00","stock":"400.00","image":"eggs_dozen.jpg","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1008999193","category":"GROCERY","tax_class_id":null,"description":"Farm fresh eggs in carton.","purchase_price":"12.00","wholesale_price":"20.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"5","name":"Orange Juice","price":"5.50","stock":"200.00","image":"orange_juice.jpg","created_at":"2026-08-17 15:14:36","unit":"kg","barcode":"1001093804","category":"GROCERY","tax_class_id":null,"description":"Fresh orange juice.","purchase_price":"0.00","wholesale_price":"5.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"6","name":"Butter Block","price":"40.00","stock":"367.00","image":"uploads\/1787203807_ChatGPT Image Aug 20, 2026, 10_25_58 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1003720265","category":"GROCERY","tax_class_id":null,"description":"Rich salted butter block.","purchase_price":"30.00","wholesale_price":"40.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"7","name":"Cheddar Cheese","price":"20.00","stock":"211.00","image":"uploads\/1787204109_Gemini_Generated_Image_wwk22mwwk22mwwk2.jfif","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1007420376","category":"GROCERY","tax_class_id":null,"description":"Aged cheddar cheese block.","purchase_price":"12.00","wholesale_price":"35.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"8","name":"Pasta Box","price":"2.50","stock":"500.00","image":"uploads\/1787204778_ChatGPT Image Aug 20, 2026, 10_45_21 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1002923387","category":"GROCERY","tax_class_id":null,"description":"Premium Italian pasta.","purchase_price":"0.00","wholesale_price":"2.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"9","name":"Tomato Sauce","price":"30.00","stock":"130.00","image":"uploads\/1787205333_Gemini_Generated_Image_2wku052wku052wku.jfif","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1008178908","category":"GROCERY","tax_class_id":null,"description":"Classic marinara sauce.","purchase_price":"23.00","wholesale_price":"3.10","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"10","name":"Coffee Beans","price":"10.00","stock":"499.00","image":"uploads\/1787205465_Gemini_Generated_Image_higc5zhigc5zhigc.jfif","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"1005731969","category":"GROCERY","tax_class_id":null,"description":"Roasted coffee beans.","purchase_price":"5.00","wholesale_price":"35.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"11","name":"Perfume","price":"18.75","stock":"94.00","image":"perfume.jpg","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10069304910","category":"BEAUTY","tax_class_id":null,"description":"Elegant perfume bottle.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"12","name":"Face Serum","price":"24.00","stock":"123.00","image":"uploads\/1787206015_Gemini_Generated_Image_wxqngewxqngewxqn.jfif","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10030239711","category":"BEAUTY","tax_class_id":null,"description":"Hydrating face serum.","purchase_price":"0.00","wholesale_price":"24.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"13","name":"Moisturizer","price":"15.50","stock":"78.00","image":"beauty_products.jpg","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10081759912","category":"BEAUTY","tax_class_id":null,"description":"Skin moisturizer cream.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"14","name":"Lip Balm","price":"4.25","stock":"98.00","image":"uploads\/1787206617_ChatGPT Image Aug 20, 2026, 11_16_16 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10024194413","category":"BEAUTY","tax_class_id":null,"description":"Nourishing lip balm.","purchase_price":"0.00","wholesale_price":"4.25","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"15","name":"Body Wash","price":"8.99","stock":"100.00","image":"uploads\/1787207025_ChatGPT Image Aug 20, 2026, 11_23_12 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10080582814","category":"BEAUTY","tax_class_id":null,"description":"Refreshing body wash.","purchase_price":"0.00","wholesale_price":"8.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"16","name":"Shampoo","price":"11.00","stock":"99.00","image":"uploads\/1787207853_ChatGPT Image Aug 20, 2026, 11_36_48 AM.png","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10050051015","category":"BEAUTY","tax_class_id":null,"description":"Revitalizing shampoo.","purchase_price":"0.00","wholesale_price":"11.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"17","name":"Hair Conditioner","price":"11.00","stock":"97.00","image":"uploads\/1787208502_Gemini_Generated_Image_xe6qbkxe6qbkxe6q.jfif","created_at":"2026-08-17 15:14:36","unit":"pcs","barcode":"10052699016","category":"BEAUTY","tax_class_id":null,"description":"Silky hair conditioner.","purchase_price":"0.00","wholesale_price":"11.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"18","name":"Sunscreen SPF 50","price":"14.50","stock":"99.00","image":"uploads\/1787208777_Gemini_Generated_Image_yzm2y5yzm2y5yzm2.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10047887117","category":"BEAUTY","tax_class_id":null,"description":"Sun protection lotion.","purchase_price":"0.00","wholesale_price":"14.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"19","name":"Eye Cream","price":"22.00","stock":"100.00","image":"uploads\/1787209016_Gemini_Generated_Image_sy5z3bsy5z3bsy5z.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10036626618","category":"BEAUTY","tax_class_id":null,"description":"Anti-aging eye cream.","purchase_price":"0.00","wholesale_price":"22.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"20","name":"Vitamin C","price":"9.99","stock":"99.00","image":"vitamin_c.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10031776619","category":"PHARMACY","tax_class_id":null,"description":"Vitamin C supplement.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"21","name":"Pain Reliever","price":"6.50","stock":"100.00","image":"pain_reliever.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10069106320","category":"PHARMACY","tax_class_id":null,"description":"Fast-acting pain reliever.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"22","name":"First Aid Kit","price":"30.00","stock":"119.00","image":"uploads\/1787209338_Gemini_Generated_Image_a1iq4a1iq4a1iq4a.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10028535621","category":"PHARMACY","tax_class_id":null,"description":"Compact first aid kit.","purchase_price":"20.00","wholesale_price":"19.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"23","name":"Cough Syrup","price":"25.00","stock":"333.00","image":"uploads\/1787209947_Gemini_Generated_Image_unton4unton4unto.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10059085322","category":"PHARMACY","tax_class_id":null,"description":"Soothing cough syrup.","purchase_price":"20.00","wholesale_price":"555.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"24","name":"Allergy Pills","price":"12.50","stock":"88.00","image":"pharmacy_shelf.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10095957423","category":"PHARMACY","tax_class_id":null,"description":"Allergy relief pills.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"25","name":"Bandages","price":"3.99","stock":"60.00","image":"uploads\/1787210238_Gemini_Generated_Image_8ovhde8ovhde8ovh.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10064511324","category":"PHARMACY","tax_class_id":null,"description":"Adhesive bandages.","purchase_price":"0.00","wholesale_price":"3.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"26","name":"Thermometer","price":"15.00","stock":"100.00","image":"uploads\/1787210461_Gemini_Generated_Image_ysy2s8ysy2s8ysy2.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10086835225","category":"PHARMACY","tax_class_id":null,"description":"Digital thermometer.","purchase_price":"0.00","wholesale_price":"15.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"27","name":"Hand Sanitizer","price":"4.50","stock":"100.00","image":"uploads\/1787199254_Gemini_Generated_Image_1rpwx91rpwx91rpw.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10039411426","category":"PHARMACY","tax_class_id":null,"description":"Hand sanitizer gel.","purchase_price":"0.00","wholesale_price":"4.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"28","name":"Smart Watch","price":"199.99","stock":"100.00","image":"electronics_gadgets.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10081052027","category":"ELECTRONICS","tax_class_id":null,"description":"Sleek smart watch.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"29","name":"Wireless Earbuds","price":"129.50","stock":"89.00","image":"wireless_earbuds.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10091506328","category":"ELECTRONICS","tax_class_id":null,"description":"Wireless earbuds.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"30","name":"Power Bank","price":"29.99","stock":"100.00","image":"power_bank.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10071404529","category":"ELECTRONICS","tax_class_id":null,"description":"10000mAh power bank.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"31","name":"Bluetooth Speaker","price":"45.00","stock":"103.00","image":"bluetooth_speaker.jpg","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10027764130","category":"ELECTRONICS","tax_class_id":null,"description":"Portable bluetooth speaker.","purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"32","name":"Phone Charger","price":"18.00","stock":"100.00","image":"uploads\/1787210772_Gemini_Generated_Image_jnexa8jnexa8jnex.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10062451631","category":"ELECTRONICS","tax_class_id":null,"description":"Fast phone charger.","purchase_price":"0.00","wholesale_price":"18.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"33","name":"Laptop","price":"22.50","stock":"99.00","image":"uploads\/1787211190_Gemini_Generated_Image_ehyxiehyxiehyxie.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10022338032","category":"ELECTRONICS","tax_class_id":null,"description":"13-inch laptop sleeve.","purchase_price":"0.00","wholesale_price":"22.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"34","name":"Mouse Pad","price":"15.99","stock":"100.00","image":"uploads\/1787217838_Gemini_Generated_Image_9fkfnu9fkfnu9fkf.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10014858533","category":"ELECTRONICS","tax_class_id":null,"description":"Gaming mouse pad.","purchase_price":"0.00","wholesale_price":"15.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"35","name":"Webcam","price":"55.00","stock":"100.00","image":"uploads\/1787218104_Gemini_Generated_Image_p8gnx9p8gnx9p8gn.jfif","created_at":"2026-08-17 15:14:37","unit":"pcs","barcode":"10054998034","category":"ELECTRONICS","tax_class_id":null,"description":"1080p HD webcam.","purchase_price":"0.00","wholesale_price":"55.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"36","name":"Led","price":"15.99","stock":"50.00","image":"uploads\/1787218424_Gemini_Generated_Image_ftirikftirikftir.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000001","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"15.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"37","name":"Screwdriver Set","price":"24.50","stock":"40.00","image":"screwdriver_set.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000002","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"38","name":"Wrench","price":"12.75","stock":"60.00","image":"wrench.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000003","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"39","name":"Power Drill","price":"89.99","stock":"4.00","image":"uploads\/1787218904_Gemini_Generated_Image_vi9xrmvi9xrmvi9x.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000004","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"89.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"40","name":"Mobile Phones","price":"8.50","stock":"99.00","image":"uploads\/1787219235_Gemini_Generated_Image_81vi4u81vi4u81vi (1).jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000005","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"8.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"41","name":"Utility Knife","price":"6.99","stock":"80.00","image":"utility_knife.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000006","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"42","name":"Pliers","price":"11.25","stock":"55.00","image":"pliers.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000007","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"43","name":"Safety Goggles","price":"9.99","stock":"70.00","image":"uploads\/1787219377_Gemini_Generated_Image_i7nciai7nciai7nc.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"7000000008","category":"Hardware","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"9.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"44","name":"Notebook","price":"4.50","stock":"120.00","image":"notebook.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000001","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"45","name":"Pen Set","price":"7.99","stock":"90.00","image":"pen_set.jpg","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000002","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"46","name":"Sticky Notes","price":"3.25","stock":"150.00","image":"uploads\/1787219683_Gemini_Generated_Image_sbje4sbje4sbje4s.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000003","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"3.25","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"47","name":"Stapler","price":"14.50","stock":"45.00","image":"uploads\/1787219918_Gemini_Generated_Image_g5mxksg5mxksg5mx.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000004","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"14.50","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"48","name":"stashinery","price":"22.00","stock":"30.00","image":"uploads\/1787220389_Gemini_Generated_Image_ci62ctci62ctci62.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000005","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"22.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"49","name":"Highlighters","price":"5.99","stock":"85.00","image":"uploads\/1787162956_Gemini_Generated_Image_s931eds931eds931.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000006","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"5.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"50","name":"Calculator","price":"45.00","stock":"431.00","image":"uploads\/1787160859_Gemini_Generated_Image_6amsql6amsql6ams.jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"8000000007","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"23.00","wholesale_price":"45.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"51","name":"Whiteboard Markers","price":"8.75","stock":"100.00","image":"uploads\/1787161856_Gemini_Generated_Image_wpm8u0wpm8u0wpm8 (1).jfif","created_at":"2026-08-18 13:45:00","unit":"pcs","barcode":"5588","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"8.75","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"1","tenant_id":"1","custom_tax_rate":null},{"id":"53","name":"Calculator","price":"45.00","stock":"200.00","image":"uploads\/1787160859_Gemini_Generated_Image_6amsql6amsql6ams.jfif","created_at":"2026-08-26 22:35:38","unit":"pcs","barcode":"8000000007","category":"Stationery","tax_class_id":null,"description":null,"purchase_price":"23.00","wholesale_price":"45.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"2","tenant_id":"1","custom_tax_rate":null},{"id":"54","name":"Bandages","price":"3.99","stock":"40.00","image":"uploads\/1787210238_Gemini_Generated_Image_8ovhde8ovhde8ovh.jfif","created_at":"2026-08-27 13:07:47","unit":"pcs","barcode":"5","category":"PHARMACY","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"3.99","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"2","tenant_id":"1","custom_tax_rate":null},{"id":"55","name":"Allergy Pills","price":"12.50","stock":"12.00","image":"pharmacy_shelf.jpg","created_at":"2026-08-27 21:06:50","unit":"pcs","barcode":"10095957423","category":"PHARMACY","tax_class_id":null,"description":null,"purchase_price":"0.00","wholesale_price":"0.00","min_stock":"10.00","max_stock":"100.00","expiry_date":null,"brand":null,"status":"active","branch_id":"5","tenant_id":"1","custom_tax_rate":null}];
+    const PRI_CURR = 'PK';
+    const SEC_CURR = 'PKR';
+    const EXCH_RATE = 278.5;
+    const globalTaxRate = 0;
+</script>
+<script src="assets/js/app.js"></script>
+
+<!-- Hold Sale Modal -->
+<div id="holdSaleModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface-color); padding: 2rem; border-radius: 12px; width: 400px; max-width: 90%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+        <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Hold Current Sale</h3>
+        
+        <div style="margin-bottom: 1rem;">
+            <label style="display:block; font-weight: 500; margin-bottom: 0.5rem;">Reference / Table No. *</label>
+            <input type="text" id="hold-ref" required placeholder="e.g., Table 4 or Order 12" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display:block; font-weight: 500; margin-bottom: 0.5rem;">Customer Name (Walk-in)</label>
+            <input type="text" id="hold-walkin" placeholder="Optional" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display:block; font-weight: 500; margin-bottom: 0.5rem;">Taken By (Staff/Rider)</label>
+            <input type="text" id="hold-takenby" placeholder="e.g., Ali (Waiter)" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px;">
+        </div>
+
+        <div style="display:flex; gap: 1rem;">
+            <button class="btn btn-primary" style="flex: 1;" onclick="submitHoldSale()">Save to Hold</button>
+            <button class="btn" style="flex: 1; background:#e2e8f0; color:var(--text-main);" onclick="document.getElementById('holdSaleModal').style.display='none'">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Held Sales Modal -->
+<div id="heldSalesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface-color); padding: 2rem; border-radius: 12px; width: 600px; max-width: 90%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); max-height: 80vh; display: flex; flex-direction: column;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <h3 style="font-size: 1.5rem;">Held Sales</h3>
+            <button onclick="document.getElementById('heldSalesModal').style.display='none'" style="background:none; border:none; font-size: 1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div id="heldSalesContainer" style="overflow-y: auto; flex: 1;">
+            <p style="text-align:center; padding:2rem;">Loading...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Product Selection Modal (Appears when clicking a product in the grid) -->
+<div id="productSelectionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface-color); padding: 2rem; border-radius: 12px; width: 400px; max-width: 90%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+        <h3 id="ps-name-display" style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--primary-color);">Product Name</h3>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Price: <strong id="ps-price-display" style="color: var(--text-main);">$0.00</strong></div>
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Stock: <strong id="ps-stock-display" style="color: var(--text-main);">0</strong></div>
+        </div>
+        
+        <input type="hidden" id="ps-id">
+        <input type="hidden" id="ps-name">
+        <input type="hidden" id="ps-retail">
+        <input type="hidden" id="ps-wholesale">
+        <input type="hidden" id="ps-unit">
+
+        <div id="ps-variations-container" style="display:none; margin-bottom:1rem;">
+            <label style="display:block; font-weight: 600; margin-bottom: 0.5rem;">Select Variation</label>
+            <select id="ps-variation" style="width:100%; padding:0.75rem; border:1px solid var(--border-color); border-radius:8px; font-size:1rem;" onchange="handleVariationChange()">
+            </select>
+        </div>
+
+        <label style="display:block; font-weight: 600; margin-bottom: 0.5rem;">Select Quantity (<span id="ps-unit-display">pcs</span>)</label>
+        
+        <div style="display:flex; align-items:center; gap: 0.5rem; margin-bottom: 1rem;">
+            <button class="btn" style="background:#e2e8f0; font-size: 1.5rem; padding: 0.5rem 1.2rem; border-radius: 8px;" onclick="adjustPsQty(-1)">-</button>
+            <input type="number" id="ps-qty" value="1" step="0.01" style="flex:1; text-align:center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1.5rem; font-weight: bold;">
+            <button class="btn" style="background:#e2e8f0; font-size: 1.5rem; padding: 0.5rem 1.2rem; border-radius: 8px;" onclick="adjustPsQty(1)">+</button>
+        </div>
+
+        <div style="display:flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustPsQty(5)">+5</button>
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustPsQty(10)">+10</button>
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustPsQty(50)">+50</button>
+        </div>
+
+        <div style="display:flex; gap: 1rem;">
+            <button class="btn btn-primary" style="flex: 2; padding: 1rem; font-size: 1.1rem;" onclick="confirmProductSelection()">Add to Cart</button>
+            <button class="btn" style="flex: 1; background:#e2e8f0; color:var(--text-main);" onclick="closeProductSelectionModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Quantity Edit Modal for Cart -->
+<div id="quantityEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:var(--surface-color); padding: 2rem; border-radius: 12px; width: 400px; max-width: 90%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+        <h3 id="qe-name-display" style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--primary-color);">Product Name</h3>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Price: <strong id="qe-price-display" style="color: var(--text-main);">$0.00</strong></div>
+        </div>
+        
+        <input type="hidden" id="qe-id">
+
+        <label style="display:block; font-weight: 600; margin-bottom: 0.5rem;">Update Quantity (<span id="qe-unit-display">pcs</span>)</label>
+        
+        <div style="display:flex; align-items:center; gap: 0.5rem; margin-bottom: 1rem;">
+            <button class="btn" style="background:#e2e8f0; font-size: 1.5rem; padding: 0.5rem 1.2rem; border-radius: 8px;" onclick="adjustQeQty(-1)">-</button>
+            <input type="number" id="qe-qty" value="1" step="0.01" style="flex:1; text-align:center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1.5rem; font-weight: bold;">
+            <button class="btn" style="background:#e2e8f0; font-size: 1.5rem; padding: 0.5rem 1.2rem; border-radius: 8px;" onclick="adjustQeQty(1)">+</button>
+        </div>
+
+        <div style="display:flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustQeQty(5)">+5</button>
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustQeQty(10)">+10</button>
+            <button class="btn" style="flex:1; background:#f1f5f9; color: var(--text-main);" onclick="adjustQeQty(50)">+50</button>
+        </div>
+
+        <div style="display:flex; gap: 1rem;">
+            <button class="btn btn-primary" style="flex: 2; padding: 1rem; font-size: 1.1rem;" onclick="confirmQeSelection()">Update Cart</button>
+            <button class="btn" style="flex: 1; background:#e2e8f0; color:var(--text-main);" onclick="closeQeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function promptReprint() {
+    let id = prompt("Enter Sale ID to reprint:");
+    if (id) {
+        window.open('receipt.php?id=' + id, '_blank');
+    }
+}
+
+window.filterProductsGrid = function(query) {
+    query = query.toLowerCase().trim();
+    const cards = document.querySelectorAll('.product-card');
+    
+    cards.forEach(card => {
+        const name = card.querySelector('h3').innerText.toLowerCase();
+        // Extract SKU text
+        const skuEl = card.querySelector('.product-info-wrapper > div:nth-child(3)');
+        const sku = skuEl ? skuEl.innerText.toLowerCase() : '';
+        
+        if (name.includes(query) || sku.includes(query)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+};
+
+function filterCategory(cat, btnElement) {
+    const cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+        if (cat === 'All' || card.getAttribute('data-category') === cat) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Update active state
+    if (btnElement) {
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.style.background = '#f8fafc';
+            btn.style.color = '#475569';
+            btn.style.border = '1px solid #cbd5e1';
+        });
+        btnElement.style.background = '#eff6ff';
+        btnElement.style.color = 'var(--primary-color)';
+        btnElement.style.border = '1px solid var(--primary-color)';
+    }
+}
+
+// Barcode Scanner Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const barcodeInput = document.getElementById('barcodeScanner');
+    
+    // Global Barcode Scanner Intercept (for hardware scanners)
+    let barcodeBuffer = '';
+    let barcodeTimer = null;
+
+    document.addEventListener('keypress', function(e) {
+        // Only intercept if we are not typing in a text input (except barcode scanner itself)
+        if (e.target.tagName === 'INPUT' && e.target.id !== 'barcodeScanner' && e.target.id !== 'productSearch' && e.target.type === 'text') {
+            return; 
+        }
+        
+        const isScannerField = e.target.id === 'barcodeScanner';
+        
+        if (e.key === 'Enter') {
+            // If they hit enter in the scanner field manually, use its value.
+            // Otherwise, use the fast-typing hardware buffer.
+            const barcode = isScannerField ? e.target.value.trim() : barcodeBuffer.trim();
+            
+            if (barcode.length > 0) {
+                e.preventDefault();
+                barcodeBuffer = ''; // clear buffer
+                
+                fetch(`api_add_by_barcode.php?barcode=${encodeURIComponent(barcode)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.product) {
+                        addToCart(
+                            data.product.id, 
+                            data.product.name, 
+                            data.product.retail_price, 
+                            data.product.wholesale_price, 
+                            data.product.unit
+                        );
+                        showToast("Added", data.product.name + " added to cart", "success");
+                        if (barcodeInput) {
+                            barcodeInput.style.backgroundColor = '#dcfce7';
+                            setTimeout(() => barcodeInput.style.backgroundColor = '', 200);
+                            barcodeInput.value = '';
+                            const searchInput = document.getElementById('productSearch');
+                            if (searchInput) searchInput.value = '';
+                            if (typeof filterProductsGrid === 'function') filterProductsGrid('');
+                        }
+                    } else {
+                        showToast("Error", "Product not found for barcode: " + barcode, "error");
+                        if (barcodeInput) {
+                            barcodeInput.style.backgroundColor = '#fee2e2';
+                            setTimeout(() => barcodeInput.style.backgroundColor = '', 200);
+                            barcodeInput.value = '';
+                            const searchInput = document.getElementById('productSearch');
+                            if (searchInput) searchInput.value = '';
+                            if (typeof filterProductsGrid === 'function') filterProductsGrid('');
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('Error scanning barcode:', err);
+                    barcodeBuffer = '';
+                });
+                return;
+            }
+        }
+
+        // Add character to buffer if it's alphanumeric
+        if (e.key.length === 1) {
+            barcodeBuffer += e.key;
+            // Clear buffer if typing is too slow (human typing vs scanner)
+            // Hardware scanners usually type 1 char every 10-30ms. Let's use 50ms.
+            clearTimeout(barcodeTimer);
+            barcodeTimer = setTimeout(() => {
+                barcodeBuffer = '';
+            }, 100); 
+        }
+    });
+
+    
+    // Global Pro Hotkeys
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F1') {
+            e.preventDefault();
+            openCheckoutModal();
+        } else if (e.key === 'F2') {
+            e.preventDefault();
+            const searchInput = document.getElementById('productSearch');
+            if (searchInput) searchInput.focus();
+        } else if (e.key === 'F3') {
+            e.preventDefault();
+            document.getElementById('holdSaleModal').style.display = 'flex';
+        } else if (e.key === 'F4') {
+            e.preventDefault();
+            if (barcodeInput) barcodeInput.focus();
+        } else if (e.key === 'F11') {
+            // Full screen handled by browser natively mostly, but we can hook if needed
+        }
+    });
+
+    // Old explicit barcode input listener is removed since the global hardware scanner logic handles it perfectly now.
+
+    // Live Product Search Logic (by Name or Barcode)
+    const searchInput = document.getElementById('productSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            if (typeof window.filterProductsGrid === 'function') window.filterProductsGrid(this.value);
+            // Sync the other input to avoid confusion
+            if(barcodeInput) barcodeInput.value = this.value;
+        });
+    }
+    
+    if (barcodeInput) {
+        barcodeInput.addEventListener('input', function(e) {
+            if (typeof window.filterProductsGrid === 'function') window.filterProductsGrid(this.value);
+            // Sync the other input to avoid confusion
+            if(searchInput) searchInput.value = this.value;
+        });
+    }
+
+    // Monthly Cleanup Prompt Logic
+    const currentMonth = new Date().getMonth().toString() + "-" + new Date().getFullYear().toString();
+    const lastPrompted = localStorage.getItem('last_cleanup_prompt_month');
+    
+    if (lastPrompted !== currentMonth) {
+        localStorage.setItem('last_cleanup_prompt_month', currentMonth);
+        // Ask user if they want to clear previous month's history
+        setTimeout(() => {
+            if (confirm("New month started! Do you want to delete all historical data (Sales, Z-Reports, Expenses) from the previous months to save space?")) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'clear_history.php';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }, 1500);
+    }
+});
+
+// OFFLINE-FIRST POS SYSTEM
+let isOffline = !navigator.onLine;
+let offlineSales = JSON.parse(localStorage.getItem("offline_sales")) || [];
+
+// Update Status UI
+function updateNetworkStatus() {
+    isOffline = !navigator.onLine;
+    let header = document.querySelector(".header-actions > div:first-child");
+    let existingBadge = document.getElementById("offline-badge");
+    
+    if (isOffline) {
+        if (!existingBadge) {
+            header.innerHTML += '<span id="offline-badge" style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 99px; font-size: 0.8rem; margin-left: 10px; font-weight: bold;">âš¡ OFFLINE MODE</span>';
+        }
+    } else {
+        if (existingBadge) existingBadge.remove();
+        syncOfflineSales();
+    }
+}
+
+window.addEventListener("online", updateNetworkStatus);
+window.addEventListener("offline", updateNetworkStatus);
+setTimeout(updateNetworkStatus, 1000);
+
+function syncOfflineSales() {
+    if (offlineSales.length > 0 && !isOffline) {
+        let badge = document.getElementById("offline-badge");
+        if(badge) badge.innerText = "ðŸ”„ SYNCING...";
+        
+        let sale = offlineSales[0];
+        fetch('checkout.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(sale)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                offlineSales.shift();
+                localStorage.setItem("offline_sales", JSON.stringify(offlineSales));
+                syncOfflineSales(); // sync next
+            }
+        })
+        .catch(err => console.error("Sync failed:", err));
+    }
+}
+
+// Modify confirmCheckout to support offline fallback
+const originalConfirmCheckout = confirmCheckout;
+window.confirmCheckout = function() {
+    if (isOffline) {
+        let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        let taxAmount = (total * globalTaxRate) / 100;
+        let finalTotal = total + taxAmount;
+        
+        let saleData = {
+            cart: cart,
+            discount: parseFloat(document.getElementById("modal-discount").value) || 0,
+            amount_received: parseFloat(document.getElementById("modal-amount").value) || finalTotal,
+            change_returned: parseFloat(document.getElementById("modal-amount").value) - finalTotal,
+            payment_method: document.getElementById("modal-payment-method").value,
+            customer_id: document.getElementById("modal-customer").value,
+            offline_id: Date.now()
+        };
+        
+        offlineSales.push(saleData);
+        localStorage.setItem("offline_sales", JSON.stringify(offlineSales));
+        
+        alert("Sale saved OFFLINE! It will sync automatically when internet is back.");
+        closeCheckoutModal();
+        clearCart();
+    } else {
+        originalConfirmCheckout();
+    }
+};
+
+</script>
+
+
+    </main>
+    <footer class="main-footer">
+        <p>&copy; 2026 Point of Sale System</p>
+    </footer>
+    <script src="assets/js/app3.js?v=1787889632"></script>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+</body>
+</html>
+
