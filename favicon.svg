@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="40%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+
+    <!-- Glowing Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+
+    <!-- Glass Overlay Gradient -->
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Cyan Glow -->
+    <radialGradient id="cyanGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Purple Glow -->
+    <radialGradient id="purpleGlow" cx="30%" cy="70%" r="50%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Card Metallic Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Cart Metallic Gradient -->
+    <linearGradient id="cartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base Squircle -->
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  
+  <!-- Ambient Lights -->
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#cyanGlow)"/>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#purpleGlow)"/>
+
+  <!-- Glowing Border Rim -->
+  <rect x="17" y="17" width="478" height="478" rx="103" fill="none" stroke="url(#borderGrad)" stroke-width="3" stroke-opacity="0.7"/>
+  
+  <!-- Glossy Glass Surface -->
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#glassGrad)"/>
+
+  <!-- 3D POS Shopping Cart & Card Illustration -->
+  <g transform="translate(40, 30)">
+    
+    <!-- Floating Credit Card inside Cart -->
+    <g transform="translate(130, 95) rotate(-12)" filter="url(#shadow)">
+      <rect x="0" y="0" width="160" height="100" rx="12" fill="url(#cardGrad)" stroke="#fef08a" stroke-width="1.5"/>
+      <!-- Chip -->
+      <rect x="20" y="30" width="32" height="24" rx="5" fill="#fef08a" stroke="#b45309" stroke-width="1"/>
+      <line x1="36" y1="30" x2="36" y2="54" stroke="#b45309" stroke-width="0.8"/>
+      <line x1="20" y1="42" x2="52" y2="42" stroke="#b45309" stroke-width="0.8"/>
+      <!-- Contactless Wave -->
+      <path d="M 120 30 A 12 12 0 0 1 120 50" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M 126 25 A 18 18 0 0 1 126 55" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Card Text Lines -->
+      <rect x="20" y="72" width="80" height="8" rx="4" fill="#ffffff" fill-opacity="0.8"/>
+    </g>
+
+    <!-- Shopping Cart Frame -->
+    <g filter="url(#shadow)">
+      <!-- Basket Wireframe -->
+      <path d="M 100 130 
+               L 330 130 
+               C 345 130, 355 140, 350 155 
+               L 320 270 
+               C 315 285, 300 295, 285 295 
+               L 155 295 
+               C 140 295, 128 285, 122 270 
+               L 90 150 
+               L 60 150" 
+            fill="none" stroke="url(#cartGrad)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Inner Horizontal Basket Lines -->
+      <path d="M 110 175 L 340 175" fill="none" stroke="#a5b4fc" stroke-width="5" stroke-opacity="0.9"/>
+      <path d="M 120 215 L 330 215" fill="none" stroke="#a5b4fc" stroke-width="5" stroke-opacity="0.9"/>
+      <path d="M 132 255 L 320 255" fill="none" stroke="#a5b4fc" stroke-width="5" stroke-opacity="0.9"/>
+
+      <!-- Inner Vertical Basket Lines -->
+      <line x1="160" y1="135" x2="175" y2="290" stroke="#a5b4fc" stroke-width="4" stroke-opacity="0.7"/>
+      <line x1="210" y1="135" x2="218" y2="290" stroke="#a5b4fc" stroke-width="4" stroke-opacity="0.7"/>
+      <line x1="260" y1="135" x2="260" y2="290" stroke="#a5b4fc" stroke-width="4" stroke-opacity="0.7"/>
+      <line x1="300" y1="135" x2="295" y2="280" stroke="#a5b4fc" stroke-width="4" stroke-opacity="0.7"/>
+
+      <!-- Handle -->
+      <path d="M 55 150 C 45 150, 35 140, 40 128 C 45 116, 58 116, 68 116 L 85 116" fill="none" stroke="#38bdf8" stroke-width="14" stroke-linecap="round"/>
+
+      <!-- Lower Chassis -->
+      <path d="M 140 295 L 175 365 L 310 365" fill="none" stroke="url(#cartGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Wheels (Front & Rear) -->
+      <!-- Rear Wheel -->
+      <circle cx="175" cy="385" r="22" fill="#0f172a" stroke="#38bdf8" stroke-width="7"/>
+      <circle cx="175" cy="385" r="8" fill="#a5b4fc"/>
+      <!-- Front Wheel -->
+      <circle cx="310" cy="385" r="22" fill="#0f172a" stroke="#38bdf8" stroke-width="7"/>
+      <circle cx="310" cy="385" r="8" fill="#a5b4fc"/>
+    </g>
+
+    <!-- Neon Barcode / Scanner Beam Accent -->
+    <g transform="translate(190, 220)" filter="url(#neonGlow)">
+      <rect x="0" y="0" width="170" height="42" rx="10" fill="#030712" fill-opacity="0.85" stroke="#38bdf8" stroke-width="2"/>
+      <!-- Barcode Lines -->
+      <rect x="15" y="8" width="4" height="26" fill="#38bdf8"/>
+      <rect x="24" y="8" width="8" height="26" fill="#38bdf8"/>
+      <rect x="37" y="8" width="3" height="26" fill="#38bdf8"/>
+      <rect x="45" y="8" width="6" height="26" fill="#38bdf8"/>
+      <rect x="56" y="8" width="10" height="26" fill="#38bdf8"/>
+      <rect x="71" y="8" width="4" height="26" fill="#38bdf8"/>
+      <rect x="80" y="8" width="7" height="26" fill="#38bdf8"/>
+      <rect x="92" y="8" width="3" height="26" fill="#38bdf8"/>
+      <rect x="100" y="8" width="9" height="26" fill="#38bdf8"/>
+      <rect x="114" y="8" width="5" height="26" fill="#38bdf8"/>
+      <rect x="124" y="8" width="8" height="26" fill="#38bdf8"/>
+      <rect x="137" y="8" width="4" height="26" fill="#38bdf8"/>
+      <rect x="146" y="8" width="8" height="26" fill="#38bdf8"/>
+      <!-- Laser Scanning Line -->
+      <line x1="8" y1="21" x2="162" y2="21" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- AI Magic Sparkle Stars -->
+    <!-- Star 1 Top Right -->
+    <path d="M 370 70 Q 370 85 385 85 Q 370 85 370 100 Q 370 85 355 85 Q 370 85 370 70 Z" fill="#38bdf8" filter="url(#neonGlow)"/>
+    <!-- Star 2 Top Left -->
+    <path d="M 110 50 Q 110 60 120 60 Q 110 60 110 70 Q 110 60 100 60 Q 110 60 110 50 Z" fill="#c084fc" filter="url(#neonGlow)"/>
+    <!-- Star 3 Bottom Right -->
+    <path d="M 380 340 Q 380 350 390 350 Q 380 350 380 360 Q 380 350 370 350 Q 380 350 380 340 Z" fill="#fbbf24" filter="url(#neonGlow)"/>
+  </g>
+
+  <!-- Bottom Brand Text Badge -->
+  <g transform="translate(256, 452)">
+    <rect x="-140" y="-22" width="280" height="38" rx="19" fill="#0f172a" fill-opacity="0.8" stroke="url(#borderGrad)" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="0" y="3" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="3">SUPERSTORE POS</text>
+  </g>
+</svg>
